@@ -1,3 +1,3 @@
-MAINSCRIPT    := iTEBD_Ising_net.cpp
+MAINSCRIPT    := iTEBD_Ising.cpp
 SRCDIRS       := 
 SRC           := 
