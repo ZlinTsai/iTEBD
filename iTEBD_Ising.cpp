@@ -62,13 +62,15 @@ uni10::UniTensor<double> OP(string name)
 	return op;
 }
 
-uni10::UniTensor<double> H_Ising(double h)
+uni10::UniTensor<double> H_Ising(double J, double h)
 {
 	uni10::UniTensor<double> sz = OP("sz");
 	uni10::UniTensor<double> sx = OP("sx");
 	uni10::UniTensor<double> id = OP("id");
 
-    uni10::UniTensor<double> H = (-1.0) * uni10::Otimes(sz, sz) + (-0.5) * h * (uni10::Otimes(sx, id) + uni10::Otimes(id, sx));
+    // 0.5 before h by Sx_1 + Sx_2 and next Sx_2 + Sx_3 => 2 repeat! need /2
+    uni10::UniTensor<double> H = (1.0) * J * uni10::Otimes(sz, sz) + (0.5) * h * (uni10::Otimes(sx, id) + uni10::Otimes(id, sx));
+    
     return H;
 }
 
@@ -76,7 +78,7 @@ void SVD_MPS(uni10::UniTensor<double>& gammaA, uni10::UniTensor<double>& gammaB,
              uni10::UniTensor<double>& lambdaA, uni10::UniTensor<double>& lambdaB, \
              uni10::UniTensor<double> theta, int D, int d, uni10::Network& svdL, uni10::Network& svdR) 
 {
-	vector<uni10::Matrix<double>> th_svd = uni10::Svd(theta.GetBlock()); //svd( )
+	vector<uni10::Matrix<double>> th_svd = uni10::Svd(theta.GetBlock()); 
 
 	uni10::UniTensor<double> inv;
     inv = SetBond(1, 0, 1, 0, D, d);
@@ -289,7 +291,7 @@ iTEBD_1D::iTEBD_1D(iMPS& param, uni10::UniTensor<double> H, int D, double dt)
 			steps++;
 			//times += dt;
 			trotterSuzuki(param.gammaA, param.gammaB, param.lambdaA, param.lambdaB, U, D, stateU, svdL, svdR);
-            if (steps%100 == 0 || steps%101 == 0 || steps >= 10000)
+            if (steps%200 == 0 || steps%201 == 0 || steps >= 8700)
             {
                 E_old = E_new;
                 E_new = 0.5 * (ExpValue(param.gammaA, param.gammaB, param.lambdaA, param.lambdaB, H, 0, state, expVH, expVS0, expVS1) + \
@@ -299,25 +301,25 @@ iTEBD_1D::iTEBD_1D(iMPS& param, uni10::UniTensor<double> H, int D, double dt)
 		}
 		x -= 1;
 
-		if (diff <= pow(10, -10)) //conv condition -10 is good for D = 5~50, D = 100 maybe need to -12
+		if (diff <= pow(10, -12)) //conv condition -10 is good for D = 5~50, D = 100 maybe need to -12
 			break;
 	}
 }
 
 int main()
 {
-    double h = 1.0, dt = 0.2, f;
-	uni10::UniTensor<double> H = H_Ising(h);
+    double J = -1.0, h = 1.0, dt = 0.2, f;
+	uni10::UniTensor<double> H = H_Ising(J, h);
 	int d = H.bond()[0].dim();
-	int D = 20;
+	int D = 30;
 
     iMPS State(D, d);
     vector<double> hs, En, Sz0, Sz1, Sx0, Sx1;
     
-	for(f=0; f<=15; f+=1) // change h field  for(f=1000;f<=1000;f+=2)
+	for(f=0; f<=20; f+=1) // change h field  for(f=1000;f<=1000;f+=2)
 	{
 		h = 0.1*f; 	
-		H = H_Ising(h);
+		H = H_Ising(J, h);
     
         iTEBD_1D iTEBD(State, H, D, dt);
 
@@ -328,6 +330,7 @@ int main()
     
         double en = 0.5 * (ExpValue(State.gammaA, State.gammaB, State.lambdaA, State.lambdaB, H, 0, state, expVH, expVS0, expVS1) + \
                            ExpValue(State.gammaA, State.gammaB, State.lambdaA, State.lambdaB, H, 1, state, expVH, expVS0, expVS1));
+        // 0.5 by Pauli Matrix => h_bar/2 * sigma_z, here Sz is sigma_z
         double sz0 = ExpValue(State.gammaA, State.gammaB, State.lambdaA, State.lambdaB, OP("sz"), 0, state, expVH, expVS0, expVS1);
         double sz1 = ExpValue(State.gammaA, State.gammaB, State.lambdaA, State.lambdaB, OP("sz"), 1, state, expVH, expVS0, expVS1);
         double sx0 = ExpValue(State.gammaA, State.gammaB, State.lambdaA, State.lambdaB, OP("sx"), 0, state, expVH, expVS0, expVS1);
@@ -339,7 +342,8 @@ int main()
 
     // save data
     string file;
-    file = "database/bondDim_" + to_string(D) + ".csv";
+    int j = (int)J;
+    file = "database/bondDim_" + to_string(D) + "_J" + to_string(j) + ".csv";
     cout << "\nThe data already save at " << file << endl;
     ofstream fout(file);
     if (!fout)
