@@ -21,10 +21,21 @@ So we get <img src="https://latex.codecogs.com/gif.latex?\large&space;e^{-\hat{H
 
 Above picture express by Matrix Product States (MPS)[1], and we consider infinite chain that mean each site must the same (translation invariant), we only updata two site and then we can get ground state. <br />
 
-### 2.Coding
-The code use Uni10 library[3]. <br />
+### 2.Encoding
+The code [iTEBD_Ising.cpp](iTEBD_Ising.cpp) use Uni10 library[3]. <br />
+![FIG.2](database/fig_2.PNG) <br />
+The iTEBD update scheme, <br />
+(i) contract initial MPS into <img src="https://latex.codecogs.com/gif.latex?\large&space;\Theta" title="\large \Theta" />, <br />
+(ii) applying U = <img src="https://latex.codecogs.com/gif.latex?\large&space;e^{-\hat{H}\delta}" title="\large e^{-\hat{H}\delta}" />, <br />
+(iii) SVD <img src="https://latex.codecogs.com/gif.latex?\large&space;\widetilde{\Theta}" title="\large \widetilde{\Theta}" /> in order to get the same form with (i), <br />
+(iv) apply origin <img src="https://latex.codecogs.com/gif.latex?\large&space;\Lambda^B" title="\large \Lambda^B" /> and inverse <img src="https://latex.codecogs.com/gif.latex?\large&space;(\Lambda^B)^{-1}" title="\large (\Lambda^B)^{-1}" /> , then contract <img src="https://latex.codecogs.com/gif.latex?\large&space;(\Lambda^B)^{-1}" title="\large (\Lambda^B)^{-1}" /> with X and Y, so get origin form after updating. <br />
 
-### 3.References
+And also even term (exchange A and B site), repeat (i)~(iv) until energy convergence. <br />
+
+### 3.Application
+Consider one-Dimension Ising model in tranverse magnetic field <img src="https://latex.codecogs.com/gif.latex?\large&space;\hat{H}&space;=&space;J\sum_i&space;\sigma^z_i&space;\sigma^z_{i&plus;1}&space;&plus;&space;h\sum_i&space;\sigma^x_i" title="\large \hat{H} = J\sum_i \sigma^z_i \sigma^z_{i+1} + h\sum_i \sigma^x_i" /> , <img src="https://latex.codecogs.com/gif.latex?\large&space;\sigma" title="\large \sigma" /> is Pauli matrix
+
+### 4.References
 [1] Frank Pollmann Efficient Numerical Simulations Using Matrix-Product States  <br />
 [2] G. Vidal. Classical simulation of infinite-size quantum lattice systems in one spatial dimension. arXiv:cond-mat/0605597   <br />
 [3] Uni10: an open-source library for tensor network algorithms. https://gitlab.com/uni10/uni10  <br />
