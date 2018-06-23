@@ -42,7 +42,7 @@ Consider one-Dimension Ising model in tranverse magnetic field  <br />
  
 ![FIG.2](database/fig_3.PNG) <br />
  
-When h field is small system is antiferromagnetic in z-axis by J > 0, if J < 0 system will be ferromagnetic. When h field is large, system is paramagnetic.
+When h field is small system is antiferromagnetic in z-axis by J > 0, if J < 0 system will be ferromagnetic. When h field is large, system is paramagnetic. And h = 1 is critical point.
  
 ![FIG.4](database/fig_4.PNG) <br />
  
