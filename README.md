@@ -33,7 +33,14 @@ The iTEBD update scheme, <br />
 And also even term (exchange A and B site), repeat (i)~(iv) until energy convergence. <br />
 
 ### 3.Application
-Consider one-Dimension Ising model in tranverse magnetic field <img src="https://latex.codecogs.com/gif.latex?\large&space;\hat{H}&space;=&space;J\sum_i&space;\sigma^z_i&space;\sigma^z_{i&plus;1}&space;&plus;&space;h\sum_i&space;\sigma^x_i" title="\large \hat{H} = J\sum_i \sigma^z_i \sigma^z_{i+1} + h\sum_i \sigma^x_i" /> , <img src="https://latex.codecogs.com/gif.latex?\large&space;\sigma" title="\large \sigma" /> is Pauli matrix
+Consider one-Dimension Ising model in tranverse magnetic field  <br />
+
+<img src="https://latex.codecogs.com/gif.latex?\large&space;\hat{H}&space;=&space;J\sum_i&space;\sigma^z_i&space;\sigma^z_{i&plus;1}&space;&plus;&space;h\sum_i&space;\sigma^x_i" title="\large \hat{H} = J\sum_i \sigma^z_i \sigma^z_{i+1} + h\sum_i \sigma^x_i" />  <br /> 
+
+
+ <img src="https://latex.codecogs.com/gif.latex?\large&space;\sigma" title="\large \sigma" />  is Pauli matrix, when h field is small system is antiferromagnetic in z-axis by J > 0, if J < 0 system will be ferromagnetic. When h field is large, system is paramagnetic.
+ 
+ 
 
 ### 4.References
 [1] Frank Pollmann Efficient Numerical Simulations Using Matrix-Product States  <br />
